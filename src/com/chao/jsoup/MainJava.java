@@ -1,7 +1,10 @@
 package com.chao.jsoup;
 
+import com.chao.jsoup.model.BuDeJieContent;
+import com.chao.jsoup.model.BuDeJieModel;
 import com.chao.jsoup.model.SatinModel;
 import com.chao.jsoup.util.HibernateUtils;
+import com.google.gson.Gson;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jsoup.Jsoup;
@@ -13,10 +16,12 @@ import org.jsoup.select.Elements;
  * Created by Chao on 2017/10/11.
  */
 public class MainJava {
+    private static Gson gson = new Gson();
 
     public static void main(String[] args) {
         HibernateUtils.openSession();
-        saveSatin(1);
+        //saveSatin(1);
+        saveBaiSiBuDeJieApi(null);
     }
 
     public static void saveSatin(int page) {
@@ -49,5 +54,26 @@ public class MainJava {
         }
     }
 
+
+    public static void saveBaiSiBuDeJieApi(String time) {
+        String json = HttpTool.doGet("http://api.budejie.com/api/api_open.php?a=list&c=data&type=1&maxtime=" + time);
+        BuDeJieModel model = gson.fromJson(json, BuDeJieModel.class);
+        if (model != null) {
+            for (int i = 0; i < model.getList().size(); i++) {
+                BuDeJieContent content = model.getList().get(i);
+                System.out.println(content.getText());
+                Session session = HibernateUtils.openSession();
+                Transaction transaction = session.beginTransaction();
+                //content.setId(null);
+                session.save(content);
+                transaction.commit();
+                session.close();
+            }
+            saveBaiSiBuDeJieApi(model.getInfo().getMaxtime());
+        } else {
+            System.out.println("保存完毕!");
+        }
+
+    }
 
 }
