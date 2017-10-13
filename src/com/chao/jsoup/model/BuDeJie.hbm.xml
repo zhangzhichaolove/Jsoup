@@ -26,6 +26,8 @@
         <property name="theme_id" column="theme_id"/>
         <property name="theme_name" column="theme_name"/>
         <property name="theme_type" column="theme_type"/>
+        <property name="videouri" column="videouri"/>
+        <property name="videotime" column="videotime"/>
         <property name="original_pid" column="original_pid"/>
         <property name="cache_version" column="cache_version"/>
         <property name="playcount" column="playcount"/>

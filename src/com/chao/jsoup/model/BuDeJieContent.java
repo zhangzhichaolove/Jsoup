@@ -81,7 +81,7 @@ public class BuDeJieContent {
     private String theme_name;
     private String theme_type;
     private String videouri;
-    private String videotime;
+    private int videotime;
     private String original_pid;
     private int cache_version;
     private String playcount;
@@ -295,11 +295,11 @@ public class BuDeJieContent {
         this.videouri = videouri;
     }
 
-    public String getVideotime() {
+    public int getVideotime() {
         return videotime;
     }
 
-    public void setVideotime(String videotime) {
+    public void setVideotime(int videotime) {
         this.videotime = videotime;
     }
 
