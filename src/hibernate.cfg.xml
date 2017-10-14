@@ -41,6 +41,8 @@
         <!-- 将hibernate生成的sql语句格式化(语法缩进) -->
         <property name="hibernate.format_sql">true</property>
 
+        <property name="connection.characterEncoding">UTF-8</property>
+
         <!-- 【连接池配置】 -->
         <!-- 配置连接驱动管理类 -->
         <property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider

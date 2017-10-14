@@ -5,8 +5,10 @@ import com.chao.jsoup.model.BuDeJieModel;
 import com.chao.jsoup.model.SatinModel;
 import com.chao.jsoup.util.HibernateUtils;
 import com.google.gson.Gson;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,7 +23,7 @@ public class MainJava {
     public static void main(String[] args) {
         HibernateUtils.openSession();
         //saveSatin(1);
-        saveBaiSiBuDeJieApi(null);
+        saveBaiSiBuDeJieApi(1, null);
     }
 
     public static void saveSatin(int page) {
@@ -36,12 +38,17 @@ public class MainJava {
                 Element element = elements.get(i);
                 String text = element.getElementsByTag("a").get(0).getAllElements().get(0).text();
                 Session session = HibernateUtils.openSession();
-                Transaction transaction = session.beginTransaction();
-                SatinModel model = new SatinModel();
-                model.setId(null);
-                model.setContent(text);
-                session.save(model);
-                transaction.commit();
+                Criteria criteria = session.createCriteria(SatinModel.class);
+                criteria.add(Restrictions.eq("content", text));
+                SatinModel stain = (SatinModel) criteria.uniqueResult();
+                if (stain == null) {
+                    Transaction transaction = session.beginTransaction();
+                    SatinModel model = new SatinModel();
+                    model.setId(null);
+                    model.setContent(text);
+                    session.save(model);
+                    transaction.commit();
+                }
                 session.close();
                 System.out.println(text);
             }
@@ -55,21 +62,29 @@ public class MainJava {
     }
 
 
-    public static void saveBaiSiBuDeJieApi(String time) {
-        String json = HttpTool.doGet("http://api.budejie.com/api/api_open.php?a=list&c=data&type=1&maxtime=" + time);
+    public static void saveBaiSiBuDeJieApi(int page, String maxtime) {
+        System.out.println("当前加载页码：" + page);
+        String json = HttpTool.doGet("http://api.budejie.com/api/api_open.php?a=list&c=data&type=1&page=" + page + "&maxtime=" + maxtime);
         BuDeJieModel model = gson.fromJson(json, BuDeJieModel.class);
         if (model != null) {
+            maxtime = model.getInfo().getMaxtime();
             for (int i = 0; i < model.getList().size(); i++) {
                 BuDeJieContent content = model.getList().get(i);
                 System.out.println(content.getText());
                 Session session = HibernateUtils.openSession();
-                Transaction transaction = session.beginTransaction();
-                //content.setId(null);
-                session.save(content);
-                transaction.commit();
+                Criteria criteria = session.createCriteria(BuDeJieContent.class);
+                criteria.add(Restrictions.eq("text", content.getText()));
+                BuDeJieContent buDeJieContent = (BuDeJieContent) criteria.uniqueResult();
+                if (buDeJieContent == null) {//没有重复
+                    Transaction transaction = session.beginTransaction();
+                    //content.setId(null);
+                    session.save(content);
+                    transaction.commit();
+                }
                 session.close();
             }
-            saveBaiSiBuDeJieApi(model.getInfo().getMaxtime());
+            page = page + 1;
+            saveBaiSiBuDeJieApi(page, maxtime);
         } else {
             System.out.println("保存完毕!");
         }
