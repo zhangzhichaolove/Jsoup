@@ -26,6 +26,7 @@ public class MainJava {
         HibernateUtils.openSession();
         //saveSatin(1);
         //saveBaiSiBuDeJieApi(1, null);
+        start();
     }
 
     public static void start() {
