@@ -462,4 +462,17 @@ public class BuDeJieContent {
     public void setThemes(List<?> themes) {
         this.themes = themes;
     }
+
+    @Override
+    public String toString() {
+        return "BuDeJieContent{" +
+                "type='" + type + '\'' +
+                ", text='" + text + '\'' +
+                ", name='" + name + '\'' +
+                ", profile_image='" + profile_image + '\'' +
+                ", created_at=" + created_at +
+                ", videouri='" + videouri + '\'' +
+                ", cdn_img='" + cdn_img + '\'' +
+                '}';
+    }
 }
