@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.chao.jsoup.model">
+    <class name="Real_time_newsEntity" table="news_toutiao">
+
+        <id name="id">
+            <generator class="native"></generator>
+        </id>
+        <property name="group_id" column="group_id"/>
+        <property name="title" column="title"/>
+        <property name="image_url" column="image_url"/>
+    </class>
+</hibernate-mapping>
