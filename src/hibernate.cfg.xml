@@ -78,6 +78,7 @@
         <mapping resource="com/chao/jsoup/model/BuDeJie.hbm.xml"/>
         <mapping resource="com/chao/jsoup/model/TouTiao.hbm.xml"/>
         <mapping resource="com/chao/jsoup/model/MeiTu.hbm.xml"/>
+        <mapping resource="com/chao/jsoup/model/FrmaleName.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>
